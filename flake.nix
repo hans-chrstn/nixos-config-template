@@ -69,15 +69,24 @@
     nixosHosts = lib.filterAttrs (hostname: hostConfig: hostConfig.type == "nixos" || hostConfig.type == "wsl") allHosts;
     darwinHosts = lib.filterAttrs (hostname: hostConfig: hostConfig.type == "darwin") allHosts;
 
-    modules = import ./modules {inherit inputs;};
-    overlays = import ./overlays {inherit inputs;};
-    customPackagesOverlay = final: prev: import ./packages {pkgs = final;};
+    modules = import ./modules;
+    overlays = (import ./overlays) {
+      inherit inputs;
+      lib = nixpkgs.lib;
+    };
+    customPackagesOverlay = final: prev:
+      (import ./packages) {
+        pkgs = final;
+        lib = prev.lib;
+      };
   in {
     nixosConfigurations = lib.mapAttrs (hostname: hostConfig:
       lib.nixosSystem {
         system = hostConfig.arch;
         specialArgs = {inherit inputs modules;};
         modules = [
+          modules.nixos.common-linux
+          modules.nixos.common-universal
           {nixpkgs.overlays = overlays ++ [customPackagesOverlay];}
           ./hosts/${hostname}
           (lib.mkIf (hostConfig.type == "wsl") nixos-wsl.nixosModules.wsl)
@@ -93,7 +102,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users."${hostname}" = import ./users/${hostname}/home.nix;
-              extraSpecialArgs = {inherit inputs;};
+              extraSpecialArgs = {inherit inputs modules;};
             };
           }
         ];
@@ -105,6 +114,7 @@
         system = hostConfig.arch;
         specialArgs = {inherit inputs modules;};
         modules = [
+          modules.nixos.common-universal
           {nixpkgs.overlays = overlays ++ [customPackagesOverlay];}
           ./hosts/${hostname}
           home-manager.darwinModules.home-manager

@@ -1,5 +1,8 @@
-{inputs}: let
-  overlayFiles = builtins.attrNames (builtins.readDir ./.);
-  filteredFiles = builtins.filter (file: file != "default.nix") overlayFiles;
+{
+  inputs,
+  lib,
+}: let
+  dirContents = builtins.readDir ./.;
+  overlayFiles = lib.filterAttrs (name: type: name != "default.nix" && type == "regular") dirContents;
 in
-  map (file: (import ./${file})) filteredFiles
+  lib.mapAttrsToList (name: _: import ./${name} {inherit inputs;}) overlayFiles

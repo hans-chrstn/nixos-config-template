@@ -1,8 +1,4 @@
-{
-  inputs,
-  outputs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -23,9 +19,20 @@
   # })
   # ];
 
-  users.users."NEW_MACHINE_NAME" = {
-    isNormalUser = true;
-    description = "Primary user for NEW_MACHINE_NAME";
-    extraGroups = ["wheel"];
+  programs.zsh.enable = true;
+
+  users.users = {
+    "NEW_MACHINE_NAME" = {
+      isNormalUser = true;
+      description = "Primary user for NEW_MACHINE_NAME";
+      extraGroups = ["wheel"];
+      password = "123";
+      shell = pkgs.zsh;
+    };
+    root = {
+      isSystemUser = true;
+      password = "123";
+      shell = pkgs.zsh;
+    };
   };
 }

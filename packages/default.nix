@@ -1,9 +1,8 @@
-{pkgs}: let
-  items = builtins.attrNames (builtins.readDir ./.);
-  packageDirs = builtins.filter (item: (builtins.typeOf (builtins.getAttr item ./.)) == "directory") items;
+{
+  pkgs,
+  lib,
+}: let
+  dirContents = builtins.readDir ./.;
+  packageDirs = lib.filterAttrs (name: type: type == "directory") dirContents;
 in
-  builtins.listToAttrs (map (dir: {
-      name = dir;
-      value = pkgs.callPackage ./${dir} {};
-    })
-    packageDirs)
+  lib.mapAttrs (name: _: pkgs.callPackage ./${name} {}) packageDirs
