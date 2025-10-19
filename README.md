@@ -10,10 +10,8 @@ This configuration is built on a few key principles:
 * **Modularity**: Reusable sets of configurations (**modules**) encapsulate features like security hardening, specific applications, or services.
 * **Automation**: Scripts automate the creation of new machines, users, and modules, ensuring consistency and reducing boilerplate.
 
----
-
 ## Directory Structure
-
+```
 ├── flake.nix # Main flake entry point 
 ├── hosts/ # Machine-specific configurations 
 │  └── USER_NAME/
@@ -28,8 +26,7 @@ This configuration is built on a few key principles:
 │  └── home-manager/ # Home Manager modules (e.g., apps/neovim.nix) 
 ├── secrets/ # Encrypted secrets managed by sops 
 └── templates/ # Boilerplate files for scaffolding scripts
-
----
+```
 
 ## Usage
 
@@ -39,9 +36,9 @@ This flake includes several helper scripts to automate common tasks.
 
 Ensure you have Nix installed with flakes enabled.
 
-### Onboarding a New Machine
+### Creating a New Machine
 
-To add a new computer to your configuration (whether it's NixOS, macOS, or WSL):
+To add a new machine to your configuration (whether it's NixOS, macOS, or WSL):
 
 1.  Run the `new-machine` script from the flake's root directory. The script will guide you through selecting the system type and architecture.
 
