@@ -24,6 +24,8 @@ This configuration is built on a few key principles:
 ├── modules/ # Reusable configuration modules 
 │  ├── nixos/ # System-level modules (e.g., security.nix)
 │  └── home-manager/ # Home Manager modules (e.g., apps/neovim.nix) 
+├── overlays/ # General configuration overlays
+├── packages/ # General configuration packages
 ├── secrets/ # Encrypted secrets managed by sops 
 └── templates/ # Boilerplate files for scaffolding scripts
 ```
@@ -35,6 +37,11 @@ This flake includes several helper scripts to automate common tasks.
 ### Prerequisites
 
 Ensure you have Nix installed with flakes enabled.
+
+### One-Time Environment Setup
+```bash
+nix develop -c ./scripts/setup.sh
+```
 
 ### Creating a New Machine
 
@@ -74,9 +81,43 @@ To create a new, reusable module for a system feature or an application:
     nix run .#new-module -- home-manager shell
     ```
 
+### Adding New Overlays
+
+* **To create a new overlay:**
+
+    ```bash
+    # Usage: nix run .#new-overlay -- <overlay-name>
+    nix run .#new-overlay -- overlay-name
+    ```
+
+### Adding New Packages
+
+* **To create a new package:**
+
+    ```bash
+    # Usage: nix run .#new-package -- <package-name>
+    nix run .#new-package -- package-name
+    ```
+
+### Remote Deployment
+
+You can build and deploy any NixOS configuration to a remote machine over SSH. Ensure the target machine has a minimal NixOS installation and that you can SSH into it with a key.
+
+    ```bash
+    # Usage: nixos-rebuild switch --flake .#<hostname> --target-host <user>@<hostname-or-ip> --use-remote-sudo
+    nixos-rebuild switch --flake .#server --target-host user@192.168.1.100 --use-remote-sudo
+    ```
+
+### Known Issues
+* **Permission denied when using nix run .#new-foo -- foo:**
+    ```bash
+    # make sure you run this in the root repository directory
+    chmod +x ./scripts/new-package.sh ./scripts/new-overlay.sh ./scripts/new-module.sh ./scripts/new-machine ./scripts/setup.sh
+    ```
+
 > [!WARNING]
 > - THIS IS VERY EXPERIMENTAL AND IS NOT RECOMMENDED FOR PRODUCTION USE
 > - YOU ARE RESPONSIBLE FOR ANY DAMAGES TO YOUR SYSTEM
 
-## Credits
+### Credits
 Misterio77 nix-starter-config was a big insipiration for this template

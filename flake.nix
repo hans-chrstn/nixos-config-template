@@ -130,6 +130,7 @@
             alejandra
             sops
             pre-commit
+            direnv
           ];
         };
       }
@@ -163,6 +164,11 @@
       new-package = {
         type = "app";
         program = "${self}/scripts/new-package.sh";
+      };
+
+      setup = {
+        type = "app";
+        program = "${self}/scripts/setup.sh";
       };
     });
   };
