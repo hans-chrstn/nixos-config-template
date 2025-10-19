@@ -1,4 +1,13 @@
-{ lib, config, pkgs, inputs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+# NOTE: You probably don't want to mess with this
+# Every setting here can be overwritten in your host/user config
+# using foo = lib.mkForce val;
 {
   nixpkgs.config.allowUnfree = true;
   nix = let

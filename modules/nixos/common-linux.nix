@@ -1,4 +1,13 @@
-{ lib, config, pkgs, inputs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+# NOTE: You probably don't want to mess with this
+# Every setting here can be overwritten in your host/user config
+# using foo = lib.mkForce val;
 {
   boot.kernel.sysctl = {
     # The Magic SysRq key is a key combo that allows users connected to the
@@ -53,7 +62,20 @@
     sudo.wheelNeedsPassword = true;
   };
 
-  services.fstrim.enable = true;
+  systemd.oomd = {
+    enable = true;
+    settings.OOM = {
+      DefaultMemoryPressureLimit = "60%";
+      DefaultMemoryPressureDurationSec = "30";
+      SwapUsedLimit = "90%";
+    };
+  };
+
+  services = {
+    fstrim.enable = true;
+    logrotate.enable = true;
+  };
+
   zramSwap.enable = true;
 
   networking = {

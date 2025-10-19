@@ -1,15 +1,5 @@
-# This file defines overlays
-{inputs, ...}: {
-  # This one brings our custom packages from the 'pkgs' directory
-  additions = final: prev:
-    import ../packages {pkgs = final;};
-
-  # This one contains whatever you want to overlay
-  # You can change versions, add patches, set compilation flags, anything really.
-  # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
-  };
-}
+{inputs}: let
+  overlayFiles = builtins.attrNames (builtins.readDir ./.);
+  filteredFiles = builtins.filter (file: file != "default.nix") overlayFiles;
+in
+  map (file: (import ./${file})) filteredFiles
