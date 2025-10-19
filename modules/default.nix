@@ -1,7 +1,7 @@
 {
   nixos = {
-    common-universal = import ./nixos/common-universal.nix;
-    common-linux = import ./nixos/common-linux.nix;
+    common-universal = import ./nixos/common-universal;
+    common-linux = import ./nixos/common-linux;
   };
 
   home-manager = {
