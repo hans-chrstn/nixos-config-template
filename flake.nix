@@ -65,7 +65,7 @@
     ];
 
     forAllSystems = f: lib.genAttrs systems f;
-    allHosts = lib.mapAttrs (hostname: _: import ./hosts/${hostname}/system.nix) (builtins.readDir ./hosts);
+    allHosts = lib.mapAttrs (hostname: _: import ./hosts/${hostname}/system.nix) (lib.filterAttrs (name: _: name != ".gitkeep") (builtins.readDir ./hosts));
     nixosHosts = lib.filterAttrs (hostname: hostConfig: hostConfig.type == "nixos" || hostConfig.type == "wsl") allHosts;
     darwinHosts = lib.filterAttrs (hostname: hostConfig: hostConfig.type == "darwin") allHosts;
 
