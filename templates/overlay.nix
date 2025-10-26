@@ -4,4 +4,6 @@
   # hello = prev.hello.overrideAttrs (old: {
   #   version = "2.13";
   # });
+  # or flake overlays using
+  # inputs.yourflake.overlays.overlay
 }

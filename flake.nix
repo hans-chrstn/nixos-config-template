@@ -83,7 +83,10 @@
     nixosConfigurations = lib.mapAttrs (hostname: hostConfig:
       lib.nixosSystem {
         system = hostConfig.arch;
-        specialArgs = {inherit inputs modules;};
+        specialArgs = {
+          inherit inputs;
+          modules = modules.nixos;
+        };
         modules = [
           modules.nixos.common-linux
           modules.nixos.common-universal
@@ -102,7 +105,10 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users."${hostname}" = import ./users/${hostname}/home.nix;
-              extraSpecialArgs = {inherit inputs modules;};
+              extraSpecialArgs = {
+                inherit inputs;
+                modules = modules.home-manager;
+              };
             };
           }
         ];
@@ -112,7 +118,10 @@
     darwinConfigurations = lib.mapAttrs (hostname: hostConfig:
       nix-darwin.lib.darwinSystem {
         system = hostConfig.arch;
-        specialArgs = {inherit inputs modules;};
+        specialArgs = {
+          inherit inputs;
+          modules = modules.nixos;
+        };
         modules = [
           modules.nixos.common-universal
           {nixpkgs.overlays = overlays ++ [customPackagesOverlay];}
@@ -123,7 +132,10 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users."${hostname}" = import ./users/${hostname}/home.nix;
-              extraSpecialArgs = {inherit inputs;};
+              extraSpecialArgs = {
+                inherit inputs;
+                modules = modules.home-manager;
+              };
             };
           }
         ];
